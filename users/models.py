@@ -4,18 +4,21 @@ import uuid
 
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, email, password, role):
+    def create_user(self, full_name, email, password, role):
         if not email:
             raise ValueError("Users must have an email address")
         user = self.model(email=self.normalize_email(email))
+        user.full_name = full_name
         user.email = email
         user.role = role
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password):
-        user = self.create_user(email=email, password=password, role="admin")
+    def create_superuser(self, full_name, email, password):
+        user = self.create_user(
+            full_name=full_name, email=email, password=password, role="admin"
+        )
         user.is_active = True
         user.sys_admin = True
         user.save(using=self._db)
