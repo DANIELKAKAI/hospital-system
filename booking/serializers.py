@@ -25,11 +25,14 @@ class BookingSerializer(serializers.Serializer):
         end_time = validated_data["end_time"]
         booking = (
             Booking.objects.filter(doctor_id=doctor_id)
-            .filter(Q(start_time__gte=start_time) & Q(end_time__lte=end_time))
+            .filter(
+                Q(start_time__lte=start_time, end_time__gte=start_time)
+                | Q(start_time__lte=end_time, end_time__gte=end_time)
+            )
             .first()
         )
         if booking:
-            serializers.ValidationError("That time slot is booked")
+            raise serializers.ValidationError("That time slot is booked")
         return validated_data
 
     class Meta:

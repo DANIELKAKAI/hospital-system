@@ -14,35 +14,43 @@ class TestBookingViews(APITestCase):
             full_name="Test Doc",
             email="testdoc@test.com",
             password="testpass",
-            role="doctor"
+            role="doctor",
         )
-        self.doctor_access_token = RefreshToken.for_user(self.doctor).access_token
+        self.doctor_access_token = RefreshToken.for_user(
+            self.doctor
+        ).access_token
         self.doctor2 = User.objects.create_user(
             full_name="Test Doc2",
             email="testdoc2@test.com",
             password="testpass",
-            role="doctor"
+            role="doctor",
         )
-        self.doctor_access_token2 = RefreshToken.for_user(self.doctor2).access_token
+        self.doctor_access_token2 = RefreshToken.for_user(
+            self.doctor2
+        ).access_token
         self.patient = User.objects.create_user(
-            full_name="Test Patient2",
-            email="testpatient2@test.com",
-            password="testpass",
-            role="patient"
-        )
-        self.patient_access_token = RefreshToken.for_user(self.patient).access_token
-        self.patient2 = User.objects.create_user(
             full_name="Test Patient",
             email="testpatient@test.com",
             password="testpass",
-            role="patient"
+            role="patient",
         )
-        self.patient_access_token2 = RefreshToken.for_user(self.patient2).access_token
+        self.patient_access_token = RefreshToken.for_user(
+            self.patient
+        ).access_token
+        self.patient2 = User.objects.create_user(
+            full_name="Test Patient2",
+            email="testpatient2@test.com",
+            password="testpass",
+            role="patient",
+        )
+        self.patient_access_token2 = RefreshToken.for_user(
+            self.patient2
+        ).access_token
         self.booking = Booking.objects.create(
             patient=self.patient,
             doctor=self.doctor,
             start_time="2023-10-27T15:30:00Z",
-            end_time="2023-10-27T17:30:00Z"
+            end_time="2023-10-27T17:30:00Z",
         )
 
     def test_successful_booking_creation_by_patient(self):
@@ -51,8 +59,8 @@ class TestBookingViews(APITestCase):
         )
         data = {
             "doctor_id": str(self.doctor.id),
-            "start_time": "2023-10-27T15:30:00Z",
-            "end_time": "2023-10-27T17:30:00Z"
+            "start_time": "2023-10-27T18:30:00Z",
+            "end_time": "2023-10-27T19:30:00Z",
         }
         response = self.client.post(self.booking_url, data, format="json")
         res_data = response.json()
@@ -63,6 +71,20 @@ class TestBookingViews(APITestCase):
         self.assertEqual(str(self.patient.id), res_data["patient"]["id"])
         self.assertIn("id", res_data.keys())
 
+    def test_failed_booking_creation_by_patient_if_doctor_already_booked(self):
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Bearer {self.patient_access_token}"
+        )
+        data = {
+            "doctor_id": str(self.doctor.id),
+            "start_time": "2023-10-27T15:30:00Z",
+            "end_time": "2023-10-27T17:30:00Z",
+        }
+        response = self.client.post(self.booking_url, data, format="json")
+        res_data = response.json()
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual("That time slot is booked", res_data["non_field_errors"][0])
+
     def test_failed_booking_creation_by_doctor(self):
         self.client.credentials(
             HTTP_AUTHORIZATION=f"Bearer {self.doctor_access_token}"
@@ -70,7 +92,7 @@ class TestBookingViews(APITestCase):
         data = {
             "doctor_id": str(self.doctor.id),
             "start_time": "2023-10-27T15:30:00Z",
-            "end_time": "2023-10-27T17:30:00Z"
+            "end_time": "2023-10-27T17:30:00Z",
         }
         response = self.client.post(self.booking_url, data, format="json")
         res_data = response.json()
