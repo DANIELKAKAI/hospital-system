@@ -1,4 +1,4 @@
-# Blog Api
+# Hospital Api
 
 ## Local Installation and Setup
 
