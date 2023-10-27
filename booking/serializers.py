@@ -6,6 +6,7 @@ from users.serializers import UserSerializer
 
 
 class BookingSerializer(serializers.Serializer):
+    id = serializers.UUIDField(read_only=True)
     doctor = UserSerializer(read_only=True)
     doctor_id = serializers.UUIDField(write_only=True)
     patient = UserSerializer(read_only=True)
