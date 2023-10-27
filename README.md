@@ -18,23 +18,13 @@
 
 3. Clone the repo and install requirements
 
-   `git clone https://github.com/DANIELKAKAI/MiniBloggingApp-test`
+   `git clone https://github.com/DANIELKAKAI/hospital-system`
 
-   `cd MiniBloggingApp-test`
+   `cd hospital-system`
 
    `pip install -r requirements.txt`
 
-4. Create a .env file for environment variables
 
-   ```text
-   DJANGO_ENVIRONMENT=DEVELOPMENT or PRODUCTION
-   DJANGO_SECRET_KEY=
-   DB_NAME=
-   DB_USER=
-   DB_PASSWORD=
-   DB_HOST=
-   DB_PORT=
-   ```
 
 5. Start development server
 
@@ -45,16 +35,6 @@
 6. Run tests
 
    `python manage.py tests`
-
-## Docker Installation and Setup
-
-1. Make sure you have Docker installed on your machine.
-
-   https://www.docker.com/get-started/
-
-2. Start the docker containers
-
-   `docker compose up`
 
 ## Example Api Usage
 
