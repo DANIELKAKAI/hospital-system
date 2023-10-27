@@ -36,6 +36,12 @@
 
    `python manage.py tests`
 
+7. Coverage report
+
+   `coverage run manage.py test`
+   
+   `coverage report`
+
 ## Example Api Usage
 
 ### Sign Up Doctor
