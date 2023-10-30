@@ -2,11 +2,10 @@
 
 ## Local Installation and Setup
 
-1. Make sure you have Python3 and Postgresql installed on your machine.
+1. Make sure you have Python3 on your machine.
 
    https://www.python.org/
 
-   https://www.postgresql.org/download/
 
 2. Install Virtualenv and create a virtual environment
 
